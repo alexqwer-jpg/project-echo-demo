@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Project Echo - Mobile Prototype</title>
+  <style>
+    :root {
+      --bg:#050608; --panel:#101217; --text:#e9edf5; --muted:#8d94a3;
+      --line:#2a2f3a; --danger:#ff4b5c;
+    }
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    html, body {
+      width:100%; height:100%; margin:0; overflow:hidden; background:#000; color:var(--text);
+      font-family:-apple-system,BlinkMacSystemFont,"Noto Sans TC","Segoe UI",sans-serif;
+    }
+    body { display:flex; align-items:center; justify-content:center; }
+    #phone {
+      position:relative; width:100vw; height:100vh; max-width:480px;
+      background:radial-gradient(circle at 50% 20%,#151922 0%,#06070a 55%,#000 100%);
+      overflow:hidden;
+    }
+    .screen { position:absolute; inset:0; display:none; padding:22px; animation:fade .22s ease-out; }
+    .screen.active { display:block; }
+    @keyframes fade { from{opacity:0;transform:translateY(4px)} to{opacity:1;transform:none} }
+    .topbar {
+      position:absolute; top:0; left:0; right:0; height:34px; z-index:5;
+      display:flex; justify-content:space-between; align-items:center;
+      padding:8px 18px 0; font-size:12px; color:#cfd6e6;
+    }
+    .noise:before {
+      content:""; position:absolute; inset:0; pointer-events:none; opacity:.055;
+      background-image:repeating-linear-gradient(0deg,rgba(255,255,255,.08) 0,rgba(255,255,255,.08) 1px,transparent 1px,transparent 3px);
+      mix-blend-mode:screen;
+    }
+    .glitch {
+      position:absolute; left:0; right:0; height:2px; background:rgba(220,230,255,.18);
+      animation:glitchMove 6s infinite linear; pointer-events:none;
+    }
+    @keyframes glitchMove {
+      0%{top:12%;opacity:0} 9%{opacity:0} 10%{opacity:.9} 11%{opacity:0}
+      44%{top:73%;opacity:0} 45%{opacity:.8} 46%{opacity:0} 100%{top:20%;opacity:0}
+    }
+    .lock-time { margin-top:92px; text-align:center; font-size:62px; letter-spacing:-3px; font-weight:200; }
+    .lock-date { text-align:center; color:var(--muted); margin-top:4px; }
+    .notification {
+      margin:80px auto 0; width:min(92%,380px); background:rgba(20,23,30,.78);
+      border:1px solid rgba(255,255,255,.08); border-radius:20px; padding:16px;
+      backdrop-filter:blur(18px); box-shadow:0 12px 40px rgba(0,0,0,.35);
+    }
+    .notif-title { display:flex; justify-content:space-between; color:#fff; font-weight:650; font-size:14px; }
+    .notif-body { margin-top:8px; color:#d5d9e2; font-size:14px; line-height:1.45; }
+    .swipe {
+      position:absolute; left:0; right:0; bottom:34px; text-align:center; color:#ccd3e4;
+      font-size:13px; animation:pulse 1.4s infinite ease-in-out;
+    }
+    @keyframes pulse { 0%,100%{opacity:.45} 50%{opacity:1} }
+    .desktop-title { margin-top:58px; font-size:12px; color:var(--muted); letter-spacing:1px; }
+    .hello { margin-top:8px; font-size:28px; font-weight:650; }
+    .sub { color:var(--muted); font-size:12px; margin-top:2px; }
+    .apps { margin-top:30px; display:grid; grid-template-columns:repeat(3,1fr); gap:22px 16px; }
+    .app { min-height:92px; display:flex; flex-direction:column; align-items:center; background:transparent; color:var(--text); border:0; font:inherit; }
+    .icon {
+      width:58px; height:58px; border-radius:17px; display:flex; align-items:center; justify-content:center;
+      background:linear-gradient(145deg,#202534,#0e1118); border:1px solid rgba(255,255,255,.08);
+      box-shadow:0 10px 30px rgba(0,0,0,.32); font-size:25px; position:relative;
+    }
+    .badge {
+      position:absolute; top:-7px; right:-7px; min-width:21px; height:21px; padding:0 6px;
+      border-radius:999px; background:var(--danger); color:white; font-size:12px; line-height:21px; font-weight:700;
+    }
+    .app span { margin-top:8px; font-size:12px; color:#d7dcea; }
+    .dock {
+      position:absolute; left:18px; right:18px; bottom:18px; height:72px; border-radius:25px;
+      background:rgba(255,255,255,.065); backdrop-filter:blur(16px);
+      display:grid; grid-template-columns:repeat(4,1fr); gap:8px; padding:9px 12px;
+    }
+    .dock button { background:none; border:0; color:white; font-size:23px; border-radius:18px; }
+    .header { margin-top:34px; height:48px; display:flex; align-items:center; gap:12px; }
+    .back {
+      background:rgba(255,255,255,.07); color:white; border:1px solid rgba(255,255,255,.08);
+      border-radius:14px; width:42px; height:38px; font-size:20px;
+    }
+    .title { font-size:22px; font-weight:700; }
+    .list { margin-top:18px; border-top:1px solid var(--line); }
+    .row {
+      width:100%; border:0; background:transparent; color:var(--text); text-align:left;
+      min-height:68px; padding:12px 2px; border-bottom:1px solid var(--line);
+      display:flex; justify-content:space-between; align-items:center; gap:12px; font:inherit;
+    }
+    .row-main { font-size:16px; }
+    .row-sub { color:var(--muted); font-size:12px; margin-top:4px; line-height:1.35; }
+    .row-right { color:var(--muted); font-size:12px; white-space:nowrap; }
+    .danger { color:var(--danger); }
+    .chat { position:absolute; left:0; right:0; top:92px; bottom:74px; overflow:auto; padding:0 18px 20px; }
+    .bubble { max-width:82%; margin:10px 0; padding:12px 14px; border-radius:18px; line-height:1.55; font-size:15px; white-space:pre-line; }
+    .mira { background:#172036; color:#dfe7ff; border-bottom-left-radius:4px; }
+    .user { margin-left:auto; background:#e9edf5; color:#050608; border-bottom-right-radius:4px; }
+    .system { margin:18px auto; text-align:center; color:var(--muted); font-size:12px; max-width:86%; line-height:1.5; }
+    .choices { position:absolute; left:14px; right:14px; bottom:14px; display:flex; gap:8px; }
+    .choice {
+      flex:1; min-height:44px; border-radius:16px; border:1px solid rgba(255,255,255,.1);
+      background:#151923; color:#fff; font-size:14px; padding:8px;
+    }
+    .case-card { margin-top:24px; background:rgba(16,18,23,.88); border:1px solid var(--line); border-radius:22px; padding:18px; }
+    .case-id { color:var(--muted); font-size:12px; letter-spacing:.8px; }
+    .case-name { font-size:25px; font-weight:800; margin-top:8px; }
+    .case-desc { margin-top:14px; color:#cfd5e2; line-height:1.65; font-size:15px; }
+    .primary {
+      width:100%; margin-top:18px; height:52px; border:0; border-radius:18px;
+      background:#e8edff; color:#07080c; font-size:16px; font-weight:800;
+    }
+    .secondary {
+      width:100%; margin-top:10px; height:48px; border-radius:18px;
+      background:#151923; color:#dfe7ff; border:1px solid var(--line); font-size:15px;
+    }
+    .recording {
+      margin-top:28px; height:190px; border-radius:24px; background:#090b10;
+      border:1px solid #252b38; display:flex; align-items:center; justify-content:center;
+      flex-direction:column; overflow:hidden; position:relative;
+    }
+    .wave { display:flex; gap:4px; align-items:center; height:74px; }
+    .bar { width:4px; height:20px; background:#dfe7ff; border-radius:99px; animation:wave 1s infinite ease-in-out; opacity:.8; }
+    .bar:nth-child(2){animation-delay:.1s}.bar:nth-child(3){animation-delay:.2s}.bar:nth-child(4){animation-delay:.3s}.bar:nth-child(5){animation-delay:.4s}.bar:nth-child(6){animation-delay:.5s}
+    @keyframes wave { 0%,100%{height:12px;opacity:.35} 50%{height:62px;opacity:1} }
+    .record-text { margin-top:12px; color:#bfc7d7; font-size:14px; }
+    .hidden-line { margin-top:14px; color:#fff; font-size:18px; opacity:0; transition:opacity 1.2s; }
+    .hidden-line.show { opacity:1; }
+    .memory-space {
+      position:absolute; inset:0; background:linear-gradient(#0a0b10,#020203);
+      display:flex; flex-direction:column; justify-content:center; align-items:center;
+      padding:22px; text-align:center;
+    }
+    .station { color:#f4f6ff; font-size:28px; font-weight:200; letter-spacing:4px; }
+    .station-sub { margin-top:18px; color:#9aa1af; line-height:1.7; }
+    .white-flash { position:absolute; inset:0; background:white; opacity:0; pointer-events:none; }
+    .white-flash.on { animation:white 1.8s ease-out; }
+    @keyframes white { 0%{opacity:0} 25%{opacity:.88} 100%{opacity:0} }
+    .corrupt { animation:corrupt .12s 4; }
+    @keyframes corrupt { 0%{transform:translate(0,0)} 25%{transform:translate(-2px,1px)} 50%{transform:translate(2px,-1px)} 75%{transform:translate(-1px,-2px)} 100%{transform:translate(0,0)} }
+    .tiny { font-size:11px; color:var(--muted); line-height:1.5; }
+  </style>
+</head>
+<body>
+  <div id="phone" class="noise">
+    <div class="topbar"><span id="clock">03:17</span><span>Project Echo</span></div>
+    <div class="glitch"></div>
+
+    <section id="lock" class="screen active">
+      <div class="lock-time">03:17</div>
+      <div class="lock-date">星期四　雨</div>
+      <div class="notification" onclick="unlock()">
+        <div class="notif-title"><span>未接來電（17）</span><span>現在</span></div>
+        <div class="notif-body">來電者：未知人格<br/>「不要掛掉。」</div>
+      </div>
+      <div class="swipe">點擊通知以解鎖</div>
+    </section>
+
+    <section id="home" class="screen">
+      <div class="desktop-title">ECHO SYNC DEVICE / KANE</div>
+      <div class="hello">早安，Kane。</div>
+      <div class="sub">同步率 17%　人格穩定：正常</div>
+      <div class="apps">
+        <button class="app" onclick="openScreen('calls')"><div class="icon">☎<div class="badge">17</div></div><span>通話</span></button>
+        <button class="app" onclick="openScreen('messages')"><div class="icon">💬<div class="badge">1</div></div><span>訊息</span></button>
+        <button class="app" onclick="openScreen('case')"><div class="icon">◇</div><span>同步局</span></button>
+        <button class="app" onclick="openScreen('photos')"><div class="icon">▧</div><span>相簿</span></button>
+        <button class="app" onclick="openScreen('records')"><div class="icon">▤</div><span>錄音</span></button>
+        <button class="app" onclick="openScreen('mira')"><div class="icon">M</div><span>MIRA</span></button>
+      </div>
+      <div class="dock">
+        <button onclick="openScreen('calls')">☎</button>
+        <button onclick="openScreen('messages')">💬</button>
+        <button onclick="openScreen('case')">◇</button>
+        <button onclick="openScreen('mira')">M</button>
+      </div>
+    </section>
+
+    <section id="calls" class="screen">
+      <div class="header"><button class="back" onclick="openScreen('home')">‹</button><div><div class="title">通話紀錄</div><div class="sub">17 通未接來電</div></div></div>
+      <div class="list" id="callList"></div>
+    </section>
+
+    <section id="messages" class="screen">
+      <div class="header"><button class="back" onclick="openScreen('home')">‹</button><div><div class="title">訊息</div><div class="sub">MIRA</div></div></div>
+      <div class="chat" id="msgChat">
+        <div class="bubble mira">Kane。</div>
+        <div class="bubble mira">你今天又沒有睡。</div>
+        <div class="bubble mira">來電持續了三個小時。</div>
+        <div class="bubble mira">我不建議你立刻回撥。</div>
+      </div>
+      <div class="choices">
+        <button class="choice" onclick="reply('為什麼？')">為什麼？</button>
+        <button class="choice" onclick="reply('接通它。')">接通它。</button>
+      </div>
+    </section>
+
+    <section id="mira" class="screen">
+      <div class="header"><button class="back" onclick="openScreen('home')">‹</button><div><div class="title">MIRA</div><div class="sub">人格同步輔助系統</div></div></div>
+      <div class="chat" id="miraChat">
+        <div class="system">MIRA 正在觀測你的同步狀態。</div>
+        <div class="bubble mira">你剛才停在通話紀錄的時間，比平常久。</div>
+        <div class="bubble mira">你在害怕電話，還是在害怕有人真的回來？</div>
+      </div>
+      <div class="choices">
+        <button class="choice" onclick="miraChoice(1)">只是電話。</button>
+        <button class="choice" onclick="miraChoice(2)">如果他真的回來呢？</button>
+      </div>
+    </section>
+
+    <section id="case" class="screen">
+      <div class="header"><button class="back" onclick="openScreen('home')">‹</button><div><div class="title">同步局</div><div class="sub">人格異常事件</div></div></div>
+      <div class="case-card">
+        <div class="case-id">CASE-01 / PERSONALITY RESIDUE</div>
+        <div class="case-name">不存在的來電</div>
+        <div class="case-desc">
+          三天前死亡的人，仍持續向家屬撥打電話。<br><br>
+          死者手機已停止運作。通訊公司無發話紀錄。<br>
+          但家屬手機裡，每天凌晨 03:17 都會出現同一通來電。
+        </div>
+        <button class="primary" onclick="openScreen('records')">查看錄音</button>
+        <button class="secondary" onclick="openMemory()">進入人格殘響</button>
+      </div>
+      <p class="tiny">警告：人格殘響可能導致短暫同步、記憶錯位與主觀時間異常。</p>
+    </section>
+
+    <section id="records" class="screen">
+      <div class="header"><button class="back" onclick="openScreen('home')">‹</button><div><div class="title">錄音</div><div class="sub">UNKNOWN_0317.wav</div></div></div>
+      <div class="recording" onclick="playRecording()">
+        <div class="wave"><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div></div>
+        <div class="record-text">點擊播放錄音</div>
+        <div id="hiddenLine" class="hidden-line">不要掛掉。</div>
+      </div>
+      <button class="secondary" onclick="openMemory()">進入人格殘響</button>
+    </section>
+
+    <section id="photos" class="screen">
+      <div class="header"><button class="back" onclick="openScreen('home')">‹</button><div><div class="title">相簿</div><div class="sub">最近項目</div></div></div>
+      <div class="case-card">
+        <div class="case-id">IMAGE_2147_0317</div>
+        <div class="case-desc">照片載入失敗。<br><br>錯誤：影像中包含未登錄人格。</div>
+        <button class="secondary" onclick="photoGlitch()">重新分析</button>
+      </div>
+    </section>
+
+    <section id="memory" class="screen">
+      <div class="memory-space">
+        <div class="station">WHITE TERMINAL</div>
+        <div class="station-sub" id="memoryText">下一站：不存在的人。<br>請確認你仍然記得自己的名字。</div>
+        <button class="primary" onclick="memoryNext()">繼續前進</button>
+        <button class="secondary" onclick="openScreen('home')">返回裝置</button>
+      </div>
+    </section>
+
+    <div id="flash" class="white-flash"></div>
+  </div>
+
+<script>
+  const screens = ["lock","home","calls","messages","case","records","photos","mira","memory"];
+  let sync = 17, memoryStep = 0, recordingPlayed = false;
+
+  function openScreen(id) {
+    screens.forEach(s => document.getElementById(s).classList.remove("active"));
+    document.getElementById(id).classList.add("active");
+    if (id === "calls") renderCalls();
+    if (id === "home") updateHome();
+  }
+  function unlock() { openScreen("home"); setTimeout(subtleCorrupt, 600); }
+  function updateHome() {
+    document.querySelector("#home .sub").textContent = `同步率 ${sync}%　人格穩定：${sync < 30 ? "正常" : "偏移"}`;
+  }
+  function renderCalls() {
+    const list = document.getElementById("callList");
+    list.innerHTML = "";
+    const times = ["03:17","03:16","03:15","03:14","03:14","03:13","03:12","03:12","03:11","03:10"];
+    times.forEach((t, i) => {
+      const row = document.createElement("button");
+      row.className = "row";
+      row.onclick = () => { sync += 1; if (i === 0) openScreen("records"); else subtleCorrupt(); };
+      row.innerHTML = `<div><div class="row-main danger">未知人格</div><div class="row-sub">未接來電・沒有發話來源</div></div><div class="row-right">${t}</div>`;
+      list.appendChild(row);
+    });
+  }
+  function reply(text) {
+    const chat = document.getElementById("msgChat");
+    chat.insertAdjacentHTML("beforeend", `<div class="bubble user">${text}</div>`);
+    setTimeout(() => {
+      if (text.includes("接通")) {
+        chat.insertAdjacentHTML("beforeend", `<div class="bubble mira">我已經接通過一次。</div><div class="bubble mira">Kane，你當時沒有說話。</div>`);
+        sync += 3; subtleCorrupt();
+      } else {
+        chat.insertAdjacentHTML("beforeend", `<div class="bubble mira">因為那不是電話。</div><div class="bubble mira">那比較像是一段人格，正在尋找可以回應它的人。</div>`);
+        sync += 2;
+      }
+      chat.scrollTop = chat.scrollHeight;
+    }, 550);
+  }
+  function miraChoice(n) {
+    const chat = document.getElementById("miraChat");
+    if (n === 1) {
+      chat.insertAdjacentHTML("beforeend", `<div class="bubble user">只是電話。</div><div class="bubble mira">你回答得太快了。</div>`);
+      sync += 1;
+    } else {
+      chat.insertAdjacentHTML("beforeend", `<div class="bubble user">如果他真的回來呢？</div><div class="bubble mira">那你要先決定。</div><div class="bubble mira">你想接回來的是他，還是你不想失去他的那部分自己？</div>`);
+      sync += 4;
+    }
+    chat.scrollTop = chat.scrollHeight;
+  }
+  function playRecording() {
+    document.getElementById("hiddenLine").classList.add("show");
+    if (!recordingPlayed) {
+      recordingPlayed = true; sync += 4;
+      setTimeout(() => { document.querySelector("#records .record-text").textContent = "錄音長度：00:17　來源：不存在"; }, 700);
+    }
+  }
+  function openMemory() { openScreen("memory"); flash(); }
+  function memoryNext() {
+    memoryStep++;
+    const text = document.getElementById("memoryText");
+    sync += 5;
+    if (memoryStep === 1) { text.innerHTML = "車廂裡沒有人。<br>但每個座位都像剛剛有人離開。"; flash(); }
+    else if (memoryStep === 2) { text.innerHTML = "廣播：請不要刪除我。<br>廣播：請不要讓她忘記我。"; flash(); }
+    else if (memoryStep === 3) { text.innerHTML = "你終於明白。<br>不是死者一直打來。<br>是活著的人一直不肯掛斷。"; flash(); }
+    else {
+      text.innerHTML = "CASE-01 決定<br><br>你要讓這段人格殘響安息，還是繼續被記得？<br><br><button class='primary' onclick='endCase(1)'>刪除殘響</button><button class='secondary' onclick='endCase(2)'>保留殘響</button>";
+    }
+  }
+  function endCase(n) {
+    flash();
+    setTimeout(() => {
+      openScreen("home");
+      if (n === 1) setTimeout(()=>alertLike("MIRA：你讓他安靜下來了。"), 400);
+      else { setTimeout(()=>alertLike("MIRA：他還在。只是現在，他不只在電話裡。"), 400); sync += 8; }
+      updateHome();
+    }, 500);
+  }
+  function alertLike(text) {
+    const box = document.createElement("div");
+    box.className = "notification";
+    box.style.position = "absolute"; box.style.left = "18px"; box.style.right = "18px";
+    box.style.top = "56px"; box.style.margin = "0"; box.style.zIndex = "20";
+    box.innerHTML = `<div class="notif-title"><span>MIRA</span><span>現在</span></div><div class="notif-body">${text}</div>`;
+    document.getElementById("phone").appendChild(box);
+    setTimeout(()=>box.remove(), 4200);
+  }
+  function photoGlitch() { sync += 2; subtleCorrupt(); alertLike("影像分析失敗：照片中有一個人不應該存在。"); }
+  function flash() {
+    const f = document.getElementById("flash");
+    f.classList.remove("on"); void f.offsetWidth; f.classList.add("on");
+  }
+  function subtleCorrupt() {
+    const p = document.getElementById("phone");
+    p.classList.add("corrupt");
+    setTimeout(()=>p.classList.remove("corrupt"), 600);
+  }
+  setInterval(() => {
+    document.getElementById("clock").textContent = "03:" + String(17 + Math.floor(Math.random()*2)).padStart(2,"0");
+  }, 5000);
+</script>
+</body>
+</html>
