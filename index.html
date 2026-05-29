@@ -1,15 +1,378 @@
-<!DOCTYPE html><html lang="zh-Hant"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Project Echo v0.8</title><style>
-body{margin:0;background:#05070d;color:#eef;font-family:sans-serif}#app{max-width:520px;margin:auto;min-height:100vh;padding:22px;box-sizing:border-box}h1{font-size:28px}.card,.item{background:#121827;border:1px solid #334;border-radius:18px;padding:16px;margin:12px 0}button{width:100%;padding:14px;border:0;border-radius:14px;margin:7px 0;font-weight:bold}.dark{background:#182034;color:#eef;border:1px solid #445}.sub{color:#9aa;line-height:1.7}.tag{display:inline-block;padding:6px 10px;border:1px solid #667;border-radius:99px;margin:4px}.yes{color:#72ffb2}.no{color:#ff8b9b;text-decoration:line-through}.log{white-space:pre-line;line-height:1.7}
-</style></head><body><div id="app"></div><script>
-let s="intro",room="客廳",rate=18,step=0;let f={photo:0,noodle:0,slipper:0,phone:0};let logs=["案件目標：找出「她」是誰。"];const A=()=>document.getElementById("app");function set(x){A().innerHTML=x}function c(){return Object.values(f).filter(Boolean).length}function add(n){rate+=n}function log(x){logs.push(x)}
-function board(){return `<div class=card><div class=sub>CASE-01 / 她是誰？</div><h1>案件板</h1><div class=sub>理解率 ${rate}%｜線索 ${c()}/4</div>${f.photo?'<span class="tag yes">媽媽？</span>':'<span class=tag>媽媽？</span>'}${f.slipper?'<span class="tag yes">小女孩？</span>':'<span class=tag>小女孩？</span>'}${f.phone?'<span class="tag yes">HOME？</span>':'<span class=tag>未知？</span>'}</div>`}
-function render(){if(s=="intro")set(`<h1>PROJECT ECHO</h1><div class="card log">MIRA：有人快消失了。\n\n他只留下了一句話：\n\n「不要讓她一個人。」</div><button onclick="s='case';render()">開啟 CASE-01</button>`);
-else if(s=="case")set(board()+`<div class=card><h1>哲宇公寓</h1><div class=sub>這裡不像死亡現場，比較像有人只是剛離開。</div><button onclick="s='apt';render()">進入公寓</button><button class=dark onclick="s='rec';render()">查看紀錄</button></div>`);
-else if(s=="apt")set(board()+`<h1>${room}</h1><div class=card><button onclick="room='客廳';render()">客廳</button><button onclick="room='廚房';render()">廚房</button><button onclick="room='臥室';render()">臥室</button><button onclick="room='玄關';render()">玄關</button></div>${items()}<button class=dark onclick="core()">進入人格核心</button><button class=dark onclick="s='case';render()">返回案件板</button>`);
-else if(s=="rec")set(board()+`<h1>紀錄</h1><div class="card log">${logs.join("\n\n")}</div><button onclick="s='case';render()">返回</button>`);
-else if(s=="core")set(`<h1>WHITE TERMINAL</h1><div class="card log">${step==0?"長椅上坐著一個人。\n\n他像是在等誰。":step==1?"你：她是媽媽嗎？":"哲宇：不是。"}</div><button onclick="next()">繼續</button>`);
-else set(board()+`<h1>PRELUDE END</h1><div class="card log">已排除：\n\n✗ 媽媽\n\nMIRA：你只知道答案不是媽媽。\n你還不理解他。</div><h1>她是誰？</h1>`)}
-function items(){if(room=="客廳")return `<div class=item onclick="get('photo')">照片牆<br><span class=sub>四張照片，全部都有同一個女人。</span></div><div class=item>電視<br><span class=sub>地方新聞重播，時間停在03:17。</span></div>`;if(room=="廚房")return `<div class=item onclick="get('noodle')">冷掉泡麵<br><span class=sub>桌上有兩副餐具。</span></div><div class=item>瓦斯爐<br><span class=sub>貼滿提醒標籤。</span></div>`;if(room=="臥室")return `<div class=item onclick="get('phone')">手機<br><span class=sub>47通未接來電，來自HOME。</span></div><div class=item>藥袋<br><span class=sub>姓名被水漬模糊。</span></div>`;return `<div class=item onclick="get('slipper')">第二雙拖鞋<br><span class=sub>尺寸很小，不像成人。</span></div><div class=item>雨傘<br><span class=sub>傘尖還在滴水。</span></div>`}
-function get(k){if(f[k])return;f[k]=1;if(k=="photo"){add(5);log("✓ 可能對象：媽媽。照片裡反覆出現同一位女性。")}if(k=="noodle"){add(3);log("兩副餐具：哲宇似乎在等某人一起吃飯。")}if(k=="slipper"){add(5);log("✓ 可能對象：小女孩。第二雙拖鞋尺寸偏小。")}if(k=="phone"){add(6);log("未知對象：HOME。不是姓名，是地點？")}render()}
-function core(){if(c()<3)return alert("MIRA：線索不足。至少確認三個線索。");s="core";step=0;render()}function next(){step++;if(step==2){log("✗ 已排除：媽媽。哲宇親口否認。");add(7)}if(step>2)s="end";render()}render();
-</script></body></html>
+import { useState } from "react";
+
+type Screen =
+  | "desktop"
+  | "call"
+  | "message"
+  | "gallery"
+  | "echo";
+
+export default function App() {
+  const [screen, setScreen] = useState<Screen>("desktop");
+  const [echoUnlocked, setEchoUnlocked] = useState(false);
+
+  function renderScreen() {
+    switch (screen) {
+      case "call":
+        return (
+          <CallScreen
+            unlockEcho={() => setEchoUnlocked(true)}
+            goBack={() => setScreen("desktop")}
+          />
+        );
+
+      case "message":
+        return <MessageScreen goBack={() => setScreen("desktop")} />;
+
+      case "gallery":
+        return <GalleryScreen goBack={() => setScreen("desktop")} />;
+
+      case "echo":
+        return (
+          <EchoScreen
+            unlocked={echoUnlocked}
+            goBack={() => setScreen("desktop")}
+          />
+        );
+
+      default:
+        return (
+          <DesktopScreen
+            echoUnlocked={echoUnlocked}
+            open={(s) => setScreen(s)}
+          />
+        );
+    }
+  }
+
+  return (
+    <div
+      style={{
+        width: "100vw",
+        height: "100vh",
+        background: "#000",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        color: "white",
+        fontFamily: "sans-serif",
+      }}
+    >
+      <div
+        style={{
+          width: 390,
+          height: 844,
+          background: "#111827",
+          borderRadius: 30,
+          overflow: "hidden",
+          border: "3px solid #333",
+          position: "relative",
+        }}
+      >
+        {renderScreen()}
+      </div>
+    </div>
+  );
+}
+
+function Header() {
+  return (
+    <div
+      style={{
+        height: 60,
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center",
+        padding: "0 20px",
+        borderBottom: "1px solid #333",
+      }}
+    >
+      <div>03:17</div>
+      <div>🔋87%</div>
+    </div>
+  );
+}
+
+function DesktopScreen({
+  open,
+  echoUnlocked,
+}: {
+  open: (screen: Screen) => void;
+  echoUnlocked: boolean;
+}) {
+  return (
+    <>
+      <Header />
+
+      <div
+        style={{
+          paddingTop: 80,
+          display: "grid",
+          gridTemplateColumns: "1fr 1fr",
+          gap: 30,
+          padding: 30,
+        }}
+      >
+        <AppIcon
+          label="📞 通話"
+          onClick={() => open("call")}
+        />
+
+        <AppIcon
+          label="💬 訊息"
+          onClick={() => open("message")}
+        />
+
+        <AppIcon
+          label="🖼 相簿"
+          onClick={() => open("gallery")}
+        />
+
+        <AppIcon
+          label="◉ ECHO"
+          onClick={() => {
+            if (echoUnlocked) {
+              open("echo");
+            }
+          }}
+          locked={!echoUnlocked}
+        />
+      </div>
+
+      {!echoUnlocked && (
+        <div
+          style={{
+            position: "absolute",
+            bottom: 40,
+            width: "100%",
+            textAlign: "center",
+            color: "#ff5555",
+          }}
+        >
+          先檢查未接來電
+        </div>
+      )}
+    </>
+  );
+}
+
+function AppIcon({
+  label,
+  onClick,
+  locked,
+}: {
+  label: string;
+  onClick: () => void;
+  locked?: boolean;
+}) {
+  return (
+    <button
+      onClick={onClick}
+      style={{
+        height: 80,
+        borderRadius: 16,
+        border: "none",
+        background: locked ? "#333" : "#1f2937",
+        color: "white",
+        fontSize: 18,
+      }}
+    >
+      {label}
+      {locked && " 🔒"}
+    </button>
+  );
+}
+
+function CallScreen({
+  goBack,
+  unlockEcho,
+}: {
+  goBack: () => void;
+  unlockEcho: () => void;
+}) {
+  const [played, setPlayed] = useState(false);
+
+  return (
+    <>
+      <Header />
+
+      <div style={{ padding: 20 }}>
+        <h2>UNKNOWN</h2>
+
+        <p>03:17</p>
+
+        <p>未接來電</p>
+
+        {!played ? (
+          <button
+            onClick={() => {
+              setPlayed(true);
+              unlockEcho();
+            }}
+          >
+            ▶ 播放留言
+          </button>
+        ) : (
+          <div>
+            <p>喂...</p>
+            <p>你聽得到嗎？</p>
+            <p>其實也沒關係。</p>
+            <p>我只是想確認...</p>
+            <p>還有沒有人記得我。</p>
+
+            <hr />
+
+            <p style={{ color: "#4ade80" }}>
+              ECHO 已解鎖
+            </p>
+          </div>
+        )}
+
+        <br />
+
+        <button onClick={goBack}>返回</button>
+      </div>
+    </>
+  );
+}
+
+function MessageScreen({
+  goBack,
+}: {
+  goBack: () => void;
+}) {
+  return (
+    <>
+      <Header />
+
+      <div style={{ padding: 20 }}>
+        <h2>HOME (47)</h2>
+
+        <p>你在哪？</p>
+        <p>回家好嗎？</p>
+        <p>我很擔心你。</p>
+
+        <hr />
+
+        <p>三年前</p>
+
+        <p style={{ color: "#ff8888" }}>
+          我不找你了。
+        </p>
+
+        <br />
+
+        <button onClick={goBack}>返回</button>
+      </div>
+    </>
+  );
+}
+
+function GalleryScreen({
+  goBack,
+}: {
+  goBack: () => void;
+}) {
+  const [opened, setOpened] = useState(false);
+
+  return (
+    <>
+      <Header />
+
+      <div style={{ padding: 20 }}>
+        {!opened ? (
+          <>
+            <h2>相簿</h2>
+
+            <button onClick={() => setOpened(true)}>
+              🎡 遊樂園
+            </button>
+          </>
+        ) : (
+          <>
+            <h2>2018/07/21</h2>
+
+            <div
+              style={{
+                height: 300,
+                background: "#222",
+                borderRadius: 16,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              模糊女孩
+            </div>
+
+            <p style={{ color: "#ff5555" }}>
+              ⚠ 人物辨識失敗
+            </p>
+          </>
+        )}
+
+        <br />
+
+        <button onClick={goBack}>返回</button>
+      </div>
+    </>
+  );
+}
+
+function EchoScreen({
+  unlocked,
+  goBack,
+}: {
+  unlocked: boolean;
+  goBack: () => void;
+}) {
+  if (!unlocked) {
+    return null;
+  }
+
+  return (
+    <>
+      <Header />
+
+      <div style={{ padding: 20 }}>
+        <h2>MIRA</h2>
+
+        <div
+          style={{
+            background: "#222",
+            padding: 12,
+            borderRadius: 12,
+            marginBottom: 10,
+          }}
+        >
+          你好。
+        </div>
+
+        <div
+          style={{
+            background: "#222",
+            padding: 12,
+            borderRadius: 12,
+            marginBottom: 10,
+          }}
+        >
+          有個人快消失了。
+        </div>
+
+        <div
+          style={{
+            background: "#222",
+            padding: 12,
+            borderRadius: 12,
+          }}
+        >
+          我要你幫我找到他。
+        </div>
+
+        <br />
+
+        <button onClick={goBack}>返回</button>
+      </div>
+    </>
+  );
+}
