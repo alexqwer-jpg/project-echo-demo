@@ -1,76 +1,15 @@
-<!DOCTYPE html>
-<html lang="zh-Hant">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Project Echo Test</title>
-
-<style>
-body{
-background:#05070d;
-color:white;
-font-family:-apple-system,BlinkMacSystemFont,sans-serif;
-padding:30px;
-}
-
-.card{
-background:#111827;
-border-radius:20px;
-padding:20px;
-margin-top:20px;
-}
-
-button{
-padding:12px 20px;
-border:none;
-border-radius:12px;
-font-size:16px;
-}
-</style>
-</head>
-
-<body>
-
-<h1>Project Echo</h1>
-
-<div class="card">
-<h2>語音留言（1）</h2>
-
-<p>來電者：UNKNOWN</p>
-
-<p id="msg">
-按下播放測試中文
-</p>
-
-<button onclick="playVoice()">
-▶ 播放留言
-</button>
-</div>
-
-<script>
-function playVoice(){
-
-document.getElementById("msg").innerText =
-"喂……\n\n你聽得到嗎？\n\n算了。\n\n還好。\n\n不是空號。";
-
-if("speechSynthesis" in window){
-
-const voice =
-new SpeechSynthesisUtterance(
-"喂，你聽得到嗎？算了。還好。不是空號。"
-);
-
-voice.lang = "zh-TW";
-voice.rate = 0.8;
-voice.pitch = 0.9;
-
-speechSynthesis.cancel();
-speechSynthesis.speak(voice);
-
-}
-
-}
-</script>
-
-</body>
-</html>
+<!DOCTYPE html><html lang="zh-Hant"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Project Echo v0.8</title><style>
+body{margin:0;background:#05070d;color:#eef;font-family:sans-serif}#app{max-width:520px;margin:auto;min-height:100vh;padding:22px;box-sizing:border-box}h1{font-size:28px}.card,.item{background:#121827;border:1px solid #334;border-radius:18px;padding:16px;margin:12px 0}button{width:100%;padding:14px;border:0;border-radius:14px;margin:7px 0;font-weight:bold}.dark{background:#182034;color:#eef;border:1px solid #445}.sub{color:#9aa;line-height:1.7}.tag{display:inline-block;padding:6px 10px;border:1px solid #667;border-radius:99px;margin:4px}.yes{color:#72ffb2}.no{color:#ff8b9b;text-decoration:line-through}.log{white-space:pre-line;line-height:1.7}
+</style></head><body><div id="app"></div><script>
+let s="intro",room="客廳",rate=18,step=0;let f={photo:0,noodle:0,slipper:0,phone:0};let logs=["案件目標：找出「她」是誰。"];const A=()=>document.getElementById("app");function set(x){A().innerHTML=x}function c(){return Object.values(f).filter(Boolean).length}function add(n){rate+=n}function log(x){logs.push(x)}
+function board(){return `<div class=card><div class=sub>CASE-01 / 她是誰？</div><h1>案件板</h1><div class=sub>理解率 ${rate}%｜線索 ${c()}/4</div>${f.photo?'<span class="tag yes">媽媽？</span>':'<span class=tag>媽媽？</span>'}${f.slipper?'<span class="tag yes">小女孩？</span>':'<span class=tag>小女孩？</span>'}${f.phone?'<span class="tag yes">HOME？</span>':'<span class=tag>未知？</span>'}</div>`}
+function render(){if(s=="intro")set(`<h1>PROJECT ECHO</h1><div class="card log">MIRA：有人快消失了。\n\n他只留下了一句話：\n\n「不要讓她一個人。」</div><button onclick="s='case';render()">開啟 CASE-01</button>`);
+else if(s=="case")set(board()+`<div class=card><h1>哲宇公寓</h1><div class=sub>這裡不像死亡現場，比較像有人只是剛離開。</div><button onclick="s='apt';render()">進入公寓</button><button class=dark onclick="s='rec';render()">查看紀錄</button></div>`);
+else if(s=="apt")set(board()+`<h1>${room}</h1><div class=card><button onclick="room='客廳';render()">客廳</button><button onclick="room='廚房';render()">廚房</button><button onclick="room='臥室';render()">臥室</button><button onclick="room='玄關';render()">玄關</button></div>${items()}<button class=dark onclick="core()">進入人格核心</button><button class=dark onclick="s='case';render()">返回案件板</button>`);
+else if(s=="rec")set(board()+`<h1>紀錄</h1><div class="card log">${logs.join("\n\n")}</div><button onclick="s='case';render()">返回</button>`);
+else if(s=="core")set(`<h1>WHITE TERMINAL</h1><div class="card log">${step==0?"長椅上坐著一個人。\n\n他像是在等誰。":step==1?"你：她是媽媽嗎？":"哲宇：不是。"}</div><button onclick="next()">繼續</button>`);
+else set(board()+`<h1>PRELUDE END</h1><div class="card log">已排除：\n\n✗ 媽媽\n\nMIRA：你只知道答案不是媽媽。\n你還不理解他。</div><h1>她是誰？</h1>`)}
+function items(){if(room=="客廳")return `<div class=item onclick="get('photo')">照片牆<br><span class=sub>四張照片，全部都有同一個女人。</span></div><div class=item>電視<br><span class=sub>地方新聞重播，時間停在03:17。</span></div>`;if(room=="廚房")return `<div class=item onclick="get('noodle')">冷掉泡麵<br><span class=sub>桌上有兩副餐具。</span></div><div class=item>瓦斯爐<br><span class=sub>貼滿提醒標籤。</span></div>`;if(room=="臥室")return `<div class=item onclick="get('phone')">手機<br><span class=sub>47通未接來電，來自HOME。</span></div><div class=item>藥袋<br><span class=sub>姓名被水漬模糊。</span></div>`;return `<div class=item onclick="get('slipper')">第二雙拖鞋<br><span class=sub>尺寸很小，不像成人。</span></div><div class=item>雨傘<br><span class=sub>傘尖還在滴水。</span></div>`}
+function get(k){if(f[k])return;f[k]=1;if(k=="photo"){add(5);log("✓ 可能對象：媽媽。照片裡反覆出現同一位女性。")}if(k=="noodle"){add(3);log("兩副餐具：哲宇似乎在等某人一起吃飯。")}if(k=="slipper"){add(5);log("✓ 可能對象：小女孩。第二雙拖鞋尺寸偏小。")}if(k=="phone"){add(6);log("未知對象：HOME。不是姓名，是地點？")}render()}
+function core(){if(c()<3)return alert("MIRA：線索不足。至少確認三個線索。");s="core";step=0;render()}function next(){step++;if(step==2){log("✗ 已排除：媽媽。哲宇親口否認。");add(7)}if(step>2)s="end";render()}render();
+</script></body></html>
