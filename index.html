@@ -1,28 +1,122 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no" />
-<title>Project Echo Prelude - 空號</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
+<title>Project Echo Prelude v0.6A</title>
 <style>
-:root{--bg:#05070c;--panel:#111724;--line:rgba(255,255,255,.09);--text:#eef2ff;--muted:#9ba6ba;--danger:#ff4968}*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}html,body{margin:0;padding:0;height:100%;overflow:hidden;background:#000;color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Noto Sans TC","PingFang TC",sans-serif}#app{position:relative;width:100vw;height:100vh;max-width:520px;margin:0 auto;background:radial-gradient(circle at 50% 0%,#171e2d 0,#070a12 45%,#000 100%);overflow:hidden}.screen{position:absolute;inset:0;display:none;padding:22px}.active{display:block}.top{display:flex;justify-content:space-between;align-items:center;font-size:13px;color:#d6dbea}.timeBig{text-align:center;font-size:78px;font-weight:200;letter-spacing:-2px;margin-top:86px}.card{background:rgba(16,22,34,.88);border:1px solid var(--line);border-radius:26px;padding:18px;box-shadow:0 10px 45px rgba(0,0,0,.25)}.callCard{margin:86px auto 0;max-width:420px}.row{display:flex;justify-content:space-between;gap:12px;align-items:center}.bold{font-weight:800}.muted{color:var(--muted)}.red{color:var(--danger)}.body{margin-top:13px;line-height:1.75;color:#dce3f1;font-size:17px}.hint{position:absolute;bottom:38px;left:0;right:0;text-align:center;color:#8792a8;font-size:13px}.logo{height:100%;display:flex;align-items:center;justify-content:center;flex-direction:column;text-align:center}.logo h1{font-size:39px;font-weight:300;letter-spacing:9px;margin:0 0 26px}.logo p{font-size:17px;color:#a8b0c5;letter-spacing:3px}.header{margin-top:28px;display:flex;align-items:center;gap:12px}.back{width:42px;height:42px;border:0;border-radius:14px;background:#151b29;color:white;font-size:24px}.title{font-size:24px;font-weight:800}.homeTitle{font-size:28px;font-weight:800;margin-top:46px}.sub{color:var(--muted);font-size:14px;margin-top:8px}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:30px}.iconBtn{border:0;background:transparent;color:white;display:flex;flex-direction:column;align-items:center}.icon{width:64px;height:64px;border-radius:20px;background:#131b2a;border:1px solid var(--line);display:flex;align-items:center;justify-content:center;font-size:28px;position:relative}.badge{position:absolute;right:-6px;top:-6px;background:var(--danger);height:21px;min-width:21px;border-radius:99px;font-size:12px;line-height:21px;font-weight:800}.label{font-size:12px;color:#cdd4e5;margin-top:8px}.btn{width:100%;min-height:52px;border:0;border-radius:18px;font-weight:800;font-size:16px;margin-top:14px;padding:12px 14px}.primary{background:#e9edff;color:#02040a}.secondary{background:#171d2b;color:#fff;border:1px solid var(--line)}.chat{position:absolute;left:0;right:0;top:92px;bottom:98px;overflow:auto;padding:0 18px 18px}.bubble{max-width:84%;padding:12px 14px;border-radius:18px;margin:12px 0;line-height:1.65;white-space:pre-line}.mira{background:#162039;border-bottom-left-radius:5px;color:#eef2ff}.user{margin-left:auto;background:#eef2ff;color:#05070c;border-bottom-right-radius:5px}.choices{position:absolute;left:14px;right:14px;bottom:14px;display:flex;gap:8px;flex-wrap:wrap}.choice{flex:1;min-width:31%;min-height:46px;border:0;border-radius:16px;background:#171d2b;color:white;padding:8px}.list{margin-top:18px;display:flex;flex-direction:column;gap:12px}.item{padding:16px;background:#121927;border:1px solid var(--line);border-radius:20px}.item.locked{opacity:.45}.kv{font-size:13px;color:#97a3b8;margin-top:4px}.bigCase{font-size:30px;font-weight:900;margin:8px 0}.evidenceGrid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:18px}.evi{background:#131b2a;border:1px solid var(--line);border-radius:18px;padding:15px;min-height:96px;line-height:1.55}.evi.done{border-color:rgba(233,237,255,.28);background:#19233a}.evi .name{font-weight:800}.evi .desc{margin-top:9px;color:#aab4c8;font-size:13px}.progress{height:8px;background:#0b101b;border-radius:99px;overflow:hidden;margin-top:14px;border:1px solid var(--line)}.bar{height:100%;background:#dfe6ff;width:0%;transition:.4s}.memory{height:100%;display:flex;align-items:center;justify-content:center;flex-direction:column;text-align:center;padding:24px}.memory .big{font-size:29px;letter-spacing:4px;font-weight:300}.memory .small{margin-top:22px;line-height:1.95;color:#c1cadb;font-size:17px}.toast{position:absolute;z-index:80;top:44px;left:20px;right:20px;margin:0;background:rgba(16,22,34,.94);border:1px solid var(--line);border-radius:25px;padding:17px;box-shadow:0 20px 55px rgba(0,0,0,.38)}.toastTitle{display:flex;justify-content:space-between;font-weight:800}.toastBody{margin-top:10px;line-height:1.65;color:#dce3f1}.flash{position:absolute;inset:0;background:#fff;opacity:0;pointer-events:none;z-index:70}.flash.on{animation:flash .8s ease-out}@keyframes flash{0%{opacity:0}35%{opacity:.8}100%{opacity:0}}.pulse{animation:pulse 1.4s infinite}@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.025)}}
+html,body{margin:0;height:100%;background:#000;color:#eef;font-family:-apple-system,BlinkMacSystemFont,"Noto Sans TC",sans-serif;overflow:hidden}
+#app{height:100vh;max-width:520px;margin:0 auto;background:radial-gradient(circle at top,#121a2b,#05070d 55%,#000);position:relative}
+.screen{display:none;position:absolute;inset:0;padding:22px;box-sizing:border-box;overflow:auto}
+.active{display:block}
+.top{display:flex;justify-content:space-between;color:#cbd3e8;font-size:12px}
+.clock{text-align:center;font-size:76px;font-weight:200;margin-top:70px}
+.card{background:#121927;border:1px solid rgba(255,255,255,.09);border-radius:22px;padding:18px;margin-top:22px}
+.head{display:flex;justify-content:space-between;font-weight:800}
+.body{margin-top:12px;line-height:1.8;color:#dce3f4}
+button{width:100%;border:0;border-radius:18px;padding:15px;margin-top:14px;font-size:16px;font-weight:800;background:#edf1ff;color:#03050a}
+.dark{background:#182034;color:#eef;border:1px solid rgba(255,255,255,.1)}
+.title{font-size:30px;font-weight:800;margin-top:24px}
+.hint{position:absolute;bottom:28px;left:0;right:0;text-align:center;color:#8894aa}
+.logo{height:100%;display:flex;align-items:center;justify-content:center;flex-direction:column;text-align:center}
+.logo h1{letter-spacing:5px;font-weight:300}
+.logo p{color:#9faac0;letter-spacing:2px}
+.transcript{min-height:250px;font-size:20px;line-height:1.95;white-space:pre-line}
+.bubble{max-width:86%;padding:13px 15px;margin:10px 0;border-radius:18px;line-height:1.65;white-space:pre-line}
+.mira{background:#172039;border-bottom-left-radius:5px}
+.user{background:#edf1ff;color:#000;margin-left:auto;border-bottom-right-radius:5px}
+.choices{position:fixed;left:50%;bottom:12px;transform:translateX(-50%);width:min(492px,calc(100vw - 24px));display:flex;gap:8px;flex-wrap:wrap}
+.choice{flex:1;min-width:31%;background:#182034;color:white;border:1px solid rgba(255,255,255,.1);padding:12px 8px}
+.toast{position:absolute;top:48px;left:16px;right:16px;background:#121927;border:1px solid rgba(255,255,255,.1);border-radius:18px;padding:14px;z-index:30}
 </style>
 </head>
 <body>
-<div id="app"><div class="flash" id="flash"></div>
-<section id="missed" class="screen active"><div class="top"><span>03:17</span><span>UNKNOWN</span></div><div class="timeBig">03:17</div><div class="card callCard pulse"><div class="row"><div class="bold">未知來電</div><div class="bold">現在</div></div><div class="body">來電者：UNKNOWN<br><br><span id="ringTimer">已響鈴 00:03</span></div></div><div class="hint">沒有接聽鍵。只能看著它響。</div></section>
-<section id="voicemail" class="screen"><div class="top"><span>03:17</span><span>1 則留言</span></div><div class="timeBig">03:17</div><div class="card callCard" onclick="playVoicemail()"><div class="row"><div class="bold">語音留言</div><div class="bold">剛剛</div></div><div class="body">來源：UNKNOWN<br><br>長度：00:11<br><br><span class="muted">點擊播放</span></div></div><div class="hint">有些電話，本來就接不到。</div></section>
-<section id="logo" class="screen"><div class="logo"><h1>PROJECT ECHO</h1><p>還好。不是空號。</p></div></section>
-<section id="home" class="screen"><div class="top"><span>03:17</span><span id="sync">同步率 18%</span></div><div class="homeTitle">同步局</div><div class="sub">PRELUDE：空號</div><div class="grid"><button class="iconBtn" onclick="openScreen('calls')"><div class="icon">☎<div class="badge" id="badge">1</div></div><div class="label">通話</div></button><button class="iconBtn" onclick="openScreen('mira')"><div class="icon">💬</div><div class="label">MIRA</div></button><button class="iconBtn" onclick="openScreen('casefile')"><div class="icon">◇</div><div class="label">CASE-01</div></button></div><div class="card" style="margin-top:28px"><div class="bold">系統提示</div><div class="body">你不是第一個接收端。<br>但這一次，線路沒有中斷。</div></div></section>
-<section id="calls" class="screen"><div class="header"><button class="back" onclick="openScreen('home')">‹</button><div class="title">通話紀錄</div></div><div class="list"><div class="item" onclick="playVoicemail()"><div class="row"><div class="bold red">UNKNOWN</div><div class="muted">03:17</div></div><div class="kv">未接來電，已轉為語音留言</div></div><div class="item locked"><div class="bold">媽媽</div><div class="kv">6 通未接。資料鎖定。</div></div><div class="item locked"><div class="bold">UNKNOWN</div><div class="kv">第七通。權限不足。</div></div></div></section>
-<section id="mira" class="screen"><div class="header"><button class="back" onclick="openScreen('home')">‹</button><div class="title">MIRA</div></div><div class="chat" id="chat"><div class="bubble mira">同步局連線成功。</div><div class="bubble mira">歡迎回來。</div><div class="bubble mira">你有接到電話嗎？</div></div><div class="choices" id="miraChoices"><button class="choice" onclick="miraReply(1)">我沒接到</button><button class="choice" onclick="miraReply(2)">你怎麼知道？</button><button class="choice" onclick="miraReply(3)">你是誰？</button></div></section>
-<section id="casefile" class="screen"><div class="header"><button class="back" onclick="openScreen('home')">‹</button><div class="title">CASE-01</div></div><div class="card"><div class="kv">PERSONALITY RESIDUE</div><div class="bigCase">空號</div><div class="body">對象：林哲宇<br>狀態：人格殘響<br>同步率：18%<br><br>最後紀錄：<br>「不要讓她一個人。」</div><div class="progress"><div class="bar" id="caseBar"></div></div><button class="btn primary" onclick="openScreen('apartment')">開始同步</button></div><div class="card" style="margin-top:16px"><div class="bold">MIRA 備註</div><div class="body">他留下的不是完整人格。<br>比較像一個尚未掛斷的念頭。</div></div></section>
-<section id="apartment" class="screen"><div class="header"><button class="back" onclick="openScreen('casefile')">‹</button><div class="title">哲宇的公寓</div></div><div class="card"><div class="body">雨聲很遠。<br>電視還開著，但沒有人在看。<br>這不是事故現場，比那更糟。<br><br>這是有人一直生活過的地方。</div><div class="evidenceGrid"><div class="evi" id="e1" onclick="evidence(1)"><div class="name">桌子</div><div class="desc">冷掉的泡麵。旁邊有一張發票。</div></div><div class="evi" id="e2" onclick="evidence(2)"><div class="name">鞋櫃</div><div class="desc">兩雙拖鞋。一雙很舊，一雙被擺得很整齊。</div></div><div class="evi" id="e3" onclick="evidence(3)"><div class="name">電視</div><div class="desc">地方新聞重播。時間停在 03:17。</div></div><div class="evi" id="e4" onclick="evidence(4)"><div class="name">照片牆</div><div class="desc">照片不多，但每張都被擦得很乾淨。</div></div><div class="evi" id="e5" onclick="evidence(5)"><div class="name">冰箱</div><div class="desc">貼滿便利貼。字跡有兩種。</div></div><div class="evi" id="e6" onclick="evidence(6)"><div class="name">手機</div><div class="desc">未接來電 7 通。第七通沒有號碼。</div></div></div><button class="btn primary" id="coreBtn" onclick="openScreen('core')" disabled style="opacity:.45">線索不足</button></div></section>
-<section id="core" class="screen"><div class="memory"><div class="big">WHITE TERMINAL</div><div class="small" id="coreText">長椅上坐著一個人。<br><br>他像是在等誰。</div><button class="btn primary" style="max-width:310px" onclick="nextCore()">繼續同步</button></div></section>
-<section id="end" class="screen"><div class="memory"><div class="big">PRELUDE END</div><div class="small">CASE-01 尚未結案。<br><br>MIRA 傳來最後一則訊息。<br><br>「……」<br>「你還在嗎？」<br><br><span style="color:#8995aa">正式版將從這通未接來電繼續。</span></div></div></section>
+<div id="app">
+
+<section id="lock" class="screen active">
+<div class="top"><span>03:17</span><span>UNKNOWN</span></div>
+<div class="clock">03:17</div>
+<div class="card">
+<div class="head"><span>æªç¥ä¾é»</span><span id="ring">00:05</span></div>
+<div class="body">ä¾é»èï¼UNKNOWN<br><br><span style="color:#8894aa">æ²ææ¥è½æéã</span></div>
 </div>
+<div class="hint">ç­å¾ä¾é»çµæ</div>
+</section>
+
+<section id="voicemail" class="screen">
+<div class="top"><span>03:17</span><span>èªé³çè¨</span></div>
+<div class="title">èªé³çè¨ï¼1ï¼</div>
+<div class="card">
+<div class="head"><span>UNKNOWN</span><span>03:17</span></div>
+<div class="body">çè¨é·åº¦ï¼00:23<br>é³è¨çæï¼åæ</div>
+<button onclick="playVoice()">â¶ æ­æ¾èªé³çè¨</button>
+<button class="dark" onclick="show('mira')">ç¥éçè¨</button>
+</div>
+<div class="card transcript" id="voiceText">å°æªæ­æ¾ã</div>
+</section>
+
+<section id="logo" class="screen">
+<div class="logo"><h1>PROJECT ECHO</h1><p>PRELUDE / 03:17</p></div>
+</section>
+
+<section id="mira" class="screen">
+<div class="top"><span>03:18</span><span>MIRA</span></div>
+<div class="title">MIRA</div>
+<div id="chat">
+<div class="bubble mira">ä½ ææ¥å°é»è©±åï¼</div>
+</div>
+<div class="choices" id="choices">
+<button class="choice" onclick="reply(1)">é£æ¯èª°ï¼</button>
+<button class="choice" onclick="reply(2)">ä½ æéº¼ç¥éï¼</button>
+<button class="choice" onclick="reply(3)">ææ²æ¥å°</button>
+</div>
+</section>
+
+<section id="caseOpen" class="screen">
+<div class="logo">
+<h1>CASE-01</h1>
+<p>å¥¹æ¯èª°ï¼</p>
+<div class="card" style="text-align:left">
+<div class="body">äººæ ¼æ®é¿ï¼æå²å®<br><br>æå¾åæ­¥ç´éï¼<br>ãä¸è¦è®å¥¹ä¸åäººãã</div>
+</div>
+<button onclick="toast('ä¸ä¸æ­¥','v0.6B æå å¥æ¡ä»¶æ¿èçè§£çã')">éå§åæ­¥</button>
+</div>
+</section>
+
+</div>
+
 <script>
-const screens=["missed","voicemail","logo","home","calls","mira","casefile","apartment","core","end"];let ring=3,found=0,coreStep=0,playedVoice=false,miraCount=0;const foundSet=new Set();setInterval(()=>{if(document.getElementById("missed").classList.contains("active")){ring++;document.getElementById("ringTimer").innerText="已響鈴 00:"+String(ring).padStart(2,"0");if(ring===8)buzz();if(ring>=12){buzz();openScreen("voicemail");notify("UNKNOWN","未接來電")}}},1000);function openScreen(id){screens.forEach(s=>document.getElementById(s).classList.remove("active"));document.getElementById(id).classList.add("active");buzz()}function playVoicemail(){if(playedVoice){notify("UNKNOWN","還好。不是空號。");return}playedVoice=true;playTone(70,.018,1200);notify("語音留言","（環境雜訊）");setTimeout(()=>notify("UNKNOWN","……"),1200);setTimeout(()=>notify("UNKNOWN","還好。"),2400);setTimeout(()=>notify("UNKNOWN","不是空號。"),3900);setTimeout(()=>notify("UNKNOWN","終於……"),5500);setTimeout(()=>{openScreen("logo");setTimeout(()=>openScreen("home"),2300)},7200)}function miraReply(n){const chat=document.getElementById("chat");if(n===1)chat.innerHTML+=`<div class="bubble user">我沒接到。</div><div class="bubble mira">大部分的人都沒有。</div><div class="bubble mira">有些電話，本來就接不到。</div>`;if(n===2)chat.innerHTML+=`<div class="bubble user">你怎麼知道？</div><div class="bubble mira">通常都會先打過去。</div><div class="bubble mira">誰打的？資料不足。</div>`;if(n===3)chat.innerHTML+=`<div class="bubble user">你是誰？</div><div class="bubble mira">MIRA。</div><div class="bubble mira">我負責協助你完成同步。</div>`;miraCount++;if(miraCount===2)chat.innerHTML+=`<div class="bubble mira">請開啟 CASE-01。</div><div class="bubble mira">他留下了一句話。</div>`;if(miraCount>=3)document.getElementById("miraChoices").innerHTML=`<button class="choice" onclick="openScreen('casefile')">開啟 CASE-01</button>`;chat.scrollTop=chat.scrollHeight}function evidence(n){if(foundSet.has(n))return;foundSet.add(n);found++;document.getElementById("e"+n).classList.add("done");document.getElementById("caseBar").style.width=Math.min(100,found*16)+"%";const texts={1:["發票","購買時間：03:17。品項：泡麵、礦泉水、成人紙尿褲。"],2:["鞋櫃","舊拖鞋旁邊有一張紙條：『媽，妳的在左邊。』"],3:["地方新聞","凌晨 03:17，雨天，路口事故。畫面被剪掉了。"],4:["照片背面","如果有一天我忘記你，你要替我記得。"],5:["便利貼","記得吃藥。記得關瓦斯。記得不要一個人出門。"],6:["第七通電話","聲音很低：『如果媽媽忘記你，不要怪她。』"]};notify(texts[n][0],texts[n][1]);if(found>=4){const btn=document.getElementById("coreBtn");btn.disabled=false;btn.style.opacity=1;btn.innerText="進入人格核心"}}function nextCore(){coreStep++;const t=document.getElementById("coreText");if(coreStep===1)t.innerHTML="哲宇：<br><br>她還好嗎？";else if(coreStep===2)t.innerHTML="哲宇：<br><br>沒關係。<br>我只是有點擔心。";else if(coreStep===3)t.innerHTML="哲宇：<br><br>不要讓她一個人。";else if(coreStep===4)t.innerHTML="你：<br><br>她是媽媽嗎？<br><br><br>哲宇：<br><br>不是。";else if(coreStep===5){flash();t.innerHTML="MIRA：<br><br>同步中斷。<br><br>……<br><br>抱歉。"}else openScreen("end")}function notify(title,text){const n=document.createElement("div");n.className="toast";n.innerHTML=`<div class="toastTitle"><span>${title}</span><span>現在</span></div><div class="toastBody">${text}</div>`;document.getElementById("app").appendChild(n);setTimeout(()=>n.remove(),3600)}function buzz(){if(navigator.vibrate)navigator.vibrate([50,35,50])}function playTone(freq=96,g=.025,dur=850){try{const ctx=new(window.AudioContext||window.webkitAudioContext)();const osc=ctx.createOscillator();const gain=ctx.createGain();osc.type="sawtooth";osc.frequency.value=freq;gain.gain.value=g;osc.connect(gain);gain.connect(ctx.destination);osc.start();setTimeout(()=>{osc.stop();ctx.close()},dur)}catch(e){}}function flash(){const f=document.getElementById("flash");f.classList.remove("on");void f.offsetWidth;f.classList.add("on")}
+const screens=["lock","voicemail","logo","mira","caseOpen"];
+let r=5,replies=0;
+function show(id){screens.forEach(s=>document.getElementById(s).classList.remove("active"));document.getElementById(id).classList.add("active");buzz();}
+function buzz(){if(navigator.vibrate)navigator.vibrate([60,40,60]);}
+function toast(t,b){let n=document.createElement("div");n.className="toast";n.innerHTML="<b>"+t+"</b><br><span style='color:#9aa6bd'>"+b+"</span>";app.appendChild(n);setTimeout(()=>n.remove(),3000);}
+const timer=setInterval(()=>{if(!document.getElementById("lock").classList.contains("active"))return;r--;document.getElementById("ring").innerText="00:0"+Math.max(r,0);buzz();if(r<=0){clearInterval(timer);toast("æªæ¥ä¾é»","UNKNOWN çä¸äºä¸åèªé³çè¨ã");setTimeout(()=>show("voicemail"),1200);}},1000);
+function say(text,delay){setTimeout(()=>{try{if("speechSynthesis"in window){let u=new SpeechSynthesisUtterance(text);u.lang="zh-TW";u.rate=.78;u.pitch=.82;u.volume=.95;speechSynthesis.cancel();speechSynthesis.speak(u);}}catch(e){}},delay);}
+function line(text,delay){setTimeout(()=>{document.getElementById("voiceText").innerText=text;buzz();},delay);}
+function playVoice(){
+document.getElementById("voiceText").innerText="ï¼æ²æ²è²ï¼";
+line("ï¼å¼å¸è²ï¼",1300);
+line("åâ¦â¦",3600);say("å",3600);
+line("ä½ è½å¾å°åï¼",5700);say("ä½ è½å¾å°å",5700);
+line("â¦â¦",8300);
+line("ç®äºã",10300);say("ç®äº",10300);
+line("éå¥½ã",13000);say("éå¥½",13000);
+line("ä¸æ¯ç©ºèã",15100);say("ä¸æ¯ç©ºè",15100);
+line("â¦â¦",18500);
+line("ä½ éå¨åï¼",20700);say("ä½ éå¨å",20700);
+setTimeout(()=>show("logo"),23200);
+setTimeout(()=>show("mira"),25500);
+}
+function reply(n){
+let c=document.getElementById("chat");
+if(n===1)c.innerHTML+="<div class='bubble user'>é£æ¯èª°ï¼</div><div class='bubble mira'>ä¸ç¥éã</div><div class='bubble mira'>ä½æ¯åäººé½æåæ¥å°ã</div>";
+if(n===2)c.innerHTML+="<div class='bubble user'>ä½ æéº¼ç¥éï¼</div><div class='bubble mira'>å çºç¨åºéå¸¸æ¯éæ¨£éå§ã</div><div class='bubble mira'>åé¯éï¼ç¶å¾åæ­¥ã</div>";
+if(n===3)c.innerHTML+="<div class='bubble user'>ææ²æ¥å°ã</div><div class='bubble mira'>æç¥éã</div><div class='bubble mira'>æä»¥æçä¸çè¨ã</div>";
+replies++;
+if(replies>=2){c.innerHTML+="<div class='bubble mira'>æäººå¿«æ¶å¤±äºã</div><div class='bubble mira'>ä»åªçä¸äºä¸å¥è©±ï¼</div><div class='bubble mira'>ä¸è¦è®å¥¹ä¸åäººã</div>";document.getElementById("choices").innerHTML="<button class='choice' onclick=\"show('caseOpen')\">éå CASE-01</button>";}
+c.scrollTop=c.scrollHeight;
+}
 </script>
 </body>
 </html>
