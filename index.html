@@ -2,121 +2,75 @@
 <html lang="zh-Hant">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
-<title>Project Echo Prelude v0.6A</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Project Echo Test</title>
+
 <style>
-html,body{margin:0;height:100%;background:#000;color:#eef;font-family:-apple-system,BlinkMacSystemFont,"Noto Sans TC",sans-serif;overflow:hidden}
-#app{height:100vh;max-width:520px;margin:0 auto;background:radial-gradient(circle at top,#121a2b,#05070d 55%,#000);position:relative}
-.screen{display:none;position:absolute;inset:0;padding:22px;box-sizing:border-box;overflow:auto}
-.active{display:block}
-.top{display:flex;justify-content:space-between;color:#cbd3e8;font-size:12px}
-.clock{text-align:center;font-size:76px;font-weight:200;margin-top:70px}
-.card{background:#121927;border:1px solid rgba(255,255,255,.09);border-radius:22px;padding:18px;margin-top:22px}
-.head{display:flex;justify-content:space-between;font-weight:800}
-.body{margin-top:12px;line-height:1.8;color:#dce3f4}
-button{width:100%;border:0;border-radius:18px;padding:15px;margin-top:14px;font-size:16px;font-weight:800;background:#edf1ff;color:#03050a}
-.dark{background:#182034;color:#eef;border:1px solid rgba(255,255,255,.1)}
-.title{font-size:30px;font-weight:800;margin-top:24px}
-.hint{position:absolute;bottom:28px;left:0;right:0;text-align:center;color:#8894aa}
-.logo{height:100%;display:flex;align-items:center;justify-content:center;flex-direction:column;text-align:center}
-.logo h1{letter-spacing:5px;font-weight:300}
-.logo p{color:#9faac0;letter-spacing:2px}
-.transcript{min-height:250px;font-size:20px;line-height:1.95;white-space:pre-line}
-.bubble{max-width:86%;padding:13px 15px;margin:10px 0;border-radius:18px;line-height:1.65;white-space:pre-line}
-.mira{background:#172039;border-bottom-left-radius:5px}
-.user{background:#edf1ff;color:#000;margin-left:auto;border-bottom-right-radius:5px}
-.choices{position:fixed;left:50%;bottom:12px;transform:translateX(-50%);width:min(492px,calc(100vw - 24px));display:flex;gap:8px;flex-wrap:wrap}
-.choice{flex:1;min-width:31%;background:#182034;color:white;border:1px solid rgba(255,255,255,.1);padding:12px 8px}
-.toast{position:absolute;top:48px;left:16px;right:16px;background:#121927;border:1px solid rgba(255,255,255,.1);border-radius:18px;padding:14px;z-index:30}
+body{
+background:#05070d;
+color:white;
+font-family:-apple-system,BlinkMacSystemFont,sans-serif;
+padding:30px;
+}
+
+.card{
+background:#111827;
+border-radius:20px;
+padding:20px;
+margin-top:20px;
+}
+
+button{
+padding:12px 20px;
+border:none;
+border-radius:12px;
+font-size:16px;
+}
 </style>
 </head>
+
 <body>
-<div id="app">
 
-<section id="lock" class="screen active">
-<div class="top"><span>03:17</span><span>UNKNOWN</span></div>
-<div class="clock">03:17</div>
+<h1>Project Echo</h1>
+
 <div class="card">
-<div class="head"><span>æªç¥ä¾é»</span><span id="ring">00:05</span></div>
-<div class="body">ä¾é»èï¼UNKNOWN<br><br><span style="color:#8894aa">æ²ææ¥è½æéã</span></div>
-</div>
-<div class="hint">ç­å¾ä¾é»çµæ</div>
-</section>
+<h2>語音留言（1）</h2>
 
-<section id="voicemail" class="screen">
-<div class="top"><span>03:17</span><span>èªé³çè¨</span></div>
-<div class="title">èªé³çè¨ï¼1ï¼</div>
-<div class="card">
-<div class="head"><span>UNKNOWN</span><span>03:17</span></div>
-<div class="body">çè¨é·åº¦ï¼00:23<br>é³è¨çæï¼åæ</div>
-<button onclick="playVoice()">â¶ æ­æ¾èªé³çè¨</button>
-<button class="dark" onclick="show('mira')">ç¥éçè¨</button>
-</div>
-<div class="card transcript" id="voiceText">å°æªæ­æ¾ã</div>
-</section>
+<p>來電者：UNKNOWN</p>
 
-<section id="logo" class="screen">
-<div class="logo"><h1>PROJECT ECHO</h1><p>PRELUDE / 03:17</p></div>
-</section>
+<p id="msg">
+按下播放測試中文
+</p>
 
-<section id="mira" class="screen">
-<div class="top"><span>03:18</span><span>MIRA</span></div>
-<div class="title">MIRA</div>
-<div id="chat">
-<div class="bubble mira">ä½ ææ¥å°é»è©±åï¼</div>
-</div>
-<div class="choices" id="choices">
-<button class="choice" onclick="reply(1)">é£æ¯èª°ï¼</button>
-<button class="choice" onclick="reply(2)">ä½ æéº¼ç¥éï¼</button>
-<button class="choice" onclick="reply(3)">ææ²æ¥å°</button>
-</div>
-</section>
-
-<section id="caseOpen" class="screen">
-<div class="logo">
-<h1>CASE-01</h1>
-<p>å¥¹æ¯èª°ï¼</p>
-<div class="card" style="text-align:left">
-<div class="body">äººæ ¼æ®é¿ï¼æå²å®<br><br>æå¾åæ­¥ç´éï¼<br>ãä¸è¦è®å¥¹ä¸åäººãã</div>
-</div>
-<button onclick="toast('ä¸ä¸æ­¥','v0.6B æå å¥æ¡ä»¶æ¿èçè§£çã')">éå§åæ­¥</button>
-</div>
-</section>
-
+<button onclick="playVoice()">
+▶ 播放留言
+</button>
 </div>
 
 <script>
-const screens=["lock","voicemail","logo","mira","caseOpen"];
-let r=5,replies=0;
-function show(id){screens.forEach(s=>document.getElementById(s).classList.remove("active"));document.getElementById(id).classList.add("active");buzz();}
-function buzz(){if(navigator.vibrate)navigator.vibrate([60,40,60]);}
-function toast(t,b){let n=document.createElement("div");n.className="toast";n.innerHTML="<b>"+t+"</b><br><span style='color:#9aa6bd'>"+b+"</span>";app.appendChild(n);setTimeout(()=>n.remove(),3000);}
-const timer=setInterval(()=>{if(!document.getElementById("lock").classList.contains("active"))return;r--;document.getElementById("ring").innerText="00:0"+Math.max(r,0);buzz();if(r<=0){clearInterval(timer);toast("æªæ¥ä¾é»","UNKNOWN çä¸äºä¸åèªé³çè¨ã");setTimeout(()=>show("voicemail"),1200);}},1000);
-function say(text,delay){setTimeout(()=>{try{if("speechSynthesis"in window){let u=new SpeechSynthesisUtterance(text);u.lang="zh-TW";u.rate=.78;u.pitch=.82;u.volume=.95;speechSynthesis.cancel();speechSynthesis.speak(u);}}catch(e){}},delay);}
-function line(text,delay){setTimeout(()=>{document.getElementById("voiceText").innerText=text;buzz();},delay);}
 function playVoice(){
-document.getElementById("voiceText").innerText="ï¼æ²æ²è²ï¼";
-line("ï¼å¼å¸è²ï¼",1300);
-line("åâ¦â¦",3600);say("å",3600);
-line("ä½ è½å¾å°åï¼",5700);say("ä½ è½å¾å°å",5700);
-line("â¦â¦",8300);
-line("ç®äºã",10300);say("ç®äº",10300);
-line("éå¥½ã",13000);say("éå¥½",13000);
-line("ä¸æ¯ç©ºèã",15100);say("ä¸æ¯ç©ºè",15100);
-line("â¦â¦",18500);
-line("ä½ éå¨åï¼",20700);say("ä½ éå¨å",20700);
-setTimeout(()=>show("logo"),23200);
-setTimeout(()=>show("mira"),25500);
+
+document.getElementById("msg").innerText =
+"喂……\n\n你聽得到嗎？\n\n算了。\n\n還好。\n\n不是空號。";
+
+if("speechSynthesis" in window){
+
+const voice =
+new SpeechSynthesisUtterance(
+"喂，你聽得到嗎？算了。還好。不是空號。"
+);
+
+voice.lang = "zh-TW";
+voice.rate = 0.8;
+voice.pitch = 0.9;
+
+speechSynthesis.cancel();
+speechSynthesis.speak(voice);
+
 }
-function reply(n){
-let c=document.getElementById("chat");
-if(n===1)c.innerHTML+="<div class='bubble user'>é£æ¯èª°ï¼</div><div class='bubble mira'>ä¸ç¥éã</div><div class='bubble mira'>ä½æ¯åäººé½æåæ¥å°ã</div>";
-if(n===2)c.innerHTML+="<div class='bubble user'>ä½ æéº¼ç¥éï¼</div><div class='bubble mira'>å çºç¨åºéå¸¸æ¯éæ¨£éå§ã</div><div class='bubble mira'>åé¯éï¼ç¶å¾åæ­¥ã</div>";
-if(n===3)c.innerHTML+="<div class='bubble user'>ææ²æ¥å°ã</div><div class='bubble mira'>æç¥éã</div><div class='bubble mira'>æä»¥æçä¸çè¨ã</div>";
-replies++;
-if(replies>=2){c.innerHTML+="<div class='bubble mira'>æäººå¿«æ¶å¤±äºã</div><div class='bubble mira'>ä»åªçä¸äºä¸å¥è©±ï¼</div><div class='bubble mira'>ä¸è¦è®å¥¹ä¸åäººã</div>";document.getElementById("choices").innerHTML="<button class='choice' onclick=\"show('caseOpen')\">éå CASE-01</button>";}
-c.scrollTop=c.scrollHeight;
+
 }
 </script>
+
 </body>
 </html>
